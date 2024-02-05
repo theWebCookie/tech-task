@@ -1,7 +1,7 @@
 const soundWaveBox = document.querySelector('.soundWave');
 const fileInput = document.getElementById('audioInput');
 const audioPlayer = document.getElementById('audioPlayer');
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const audioContext = new (window.AudioContext || window.AudioContext)();
 const analyser = audioContext.createAnalyser();
 const source = audioContext.createMediaElementSource(audioPlayer);
 
