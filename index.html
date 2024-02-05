@@ -9,7 +9,10 @@
   <body>
     <div class="wrapper">
       <table class="soundWave"></table>
-      <input type="file" name="audio" id="audio" accept="audio/*" />
+      <audio controls id="audioPlayer">
+        <source src="" type="audio/*" />
+      </audio>
+      <input type="file" name="audio" id="audioInput" accept="audio/*" />
     </div>
     <script src="script.js"></script>
   </body>
