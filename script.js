@@ -6,6 +6,8 @@ let audioContext;
 let analyser;
 let isPlaying = false;
 let now, then, elapsed, fpsInterval;
+let silenceBuffer = 2;
+let silenceTreshold = 128;
 
 const dictionary = {
   gridRows: 6,
@@ -65,17 +67,26 @@ function animate() {
     for (let col = 0; col < gridCols; col++) {
       const colIndex = Math.floor((col / gridCols) * data2.length);
       const amplitude = ((data2[colIndex] / 255 - 0.4) * 100) / 3;
-
       const numColoredCells = Math.round(amplitude);
 
       for (let row = gridRows - 1; row >= 0; row--) {
         const td = soundWaveBox.rows[row].cells[col];
-        const isActive = gridRows - row <= numColoredCells;
+        let isActive = gridRows - row <= numColoredCells;
+        if (data2[colIndex] >= silenceTreshold - silenceBuffer && data2[colIndex] <= silenceTreshold + silenceBuffer) {
+          isActive = false;
+        }
         td.classList.toggle('active', isActive);
       }
     }
   }
 }
+
+audioPlayer.addEventListener('ended', function () {
+  const tds = document.querySelectorAll('.soundWave td');
+  tds.forEach((td) => {
+    td.classList.remove('active');
+  });
+});
 
 function startAnimating(fps) {
   fpsInterval = 1000 / fps;
@@ -86,7 +97,7 @@ function startAnimating(fps) {
 
 audioPlayer.addEventListener('play', function () {
   isPlaying = true;
-  startAnimating(24);
+  startAnimating(20);
 });
 
 audioPlayer.addEventListener('pause', function () {
