@@ -1,6 +1,7 @@
 const soundWaveBox = document.querySelector('.soundWave');
 const fileInput = document.getElementById('audioInput');
 const audioPlayer = document.getElementById('audioPlayer');
+let source;
 let audioContext;
 let analyser;
 let isPlaying = false;
@@ -28,14 +29,16 @@ fileInput.addEventListener('change', (event) => {
   if (fileInput.files.length > 0) {
     const audioFile = URL.createObjectURL(fileInput.files[0]);
     audioPlayer.src = audioFile;
-    audioPlayer.play();
 
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioContext.createAnalyser();
-    const source = audioContext.createMediaElementSource(audioPlayer);
 
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
+    if (!source) {
+      source = audioContext.createMediaElementSource(audioPlayer);
+      analyser = audioContext.createAnalyser();
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+    }
+    audioPlayer.play();
   }
 });
 
